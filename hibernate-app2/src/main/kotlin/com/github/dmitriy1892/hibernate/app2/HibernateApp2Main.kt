@@ -1,6 +1,7 @@
 package com.github.dmitriy1892.hibernate.app2
 
 import com.github.dmitriy1892.hibernate.app2.model.ItemEntity
+import com.github.dmitriy1892.hibernate.app2.model.PassportEntity
 import com.github.dmitriy1892.hibernate.app2.model.PersonEntity
 import com.github.dmitriy1892.utils.executeInTransaction
 import org.hibernate.Session
@@ -10,6 +11,7 @@ fun main() {
     val configuration = Configuration()
         .addAnnotatedClass(PersonEntity::class.java)
         .addAnnotatedClass(ItemEntity::class.java)
+        .addAnnotatedClass(PassportEntity::class.java)
 
     val sessionFactory = configuration.buildSessionFactory()
 
@@ -32,7 +34,9 @@ fun main() {
 //    sessionFactory.currentSession.setNewOwnerForAllItems(2)
 //    sessionFactory.currentSession.printAllItems()
 
-    sessionFactory.currentSession.startCascadingSample()
+//    sessionFactory.currentSession.startCascadingSample()
+
+    sessionFactory.currentSession.addPersonWithPassport()
 }
 
 private fun Session.addNewItem(): PersonEntity = executeInTransaction {
@@ -90,6 +94,14 @@ private fun Session.startCascadingSample() = executeInTransaction {
     val person = PersonEntity(name = "Test cascading", age = 30)
     val item = ItemEntity(itemName = "Test cascading item", owner = person)
     person.items = listOf(item)
+
+    persist(person)
+}
+
+private fun Session.addPersonWithPassport() = executeInTransaction {
+    val person = PersonEntity(name = "Test person", age = 30)
+    val passport = PassportEntity(person = person, passportNumber = 123241)
+    person.passport = passport
 
     persist(person)
 }

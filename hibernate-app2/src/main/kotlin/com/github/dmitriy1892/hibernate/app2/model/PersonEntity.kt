@@ -19,7 +19,10 @@ data class PersonEntity(
     var age: Int = 0,
 
     @OneToMany(mappedBy = "owner", cascade = [CascadeType.PERSIST])
-    var items: List<ItemEntity> = emptyList()
+    var items: List<ItemEntity> = emptyList(),
+
+    @OneToOne(mappedBy = "person", cascade = [CascadeType.PERSIST])
+    var passport: PassportEntity? = null
 ) {
 
     override fun toString(): String {
