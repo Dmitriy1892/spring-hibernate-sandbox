@@ -18,7 +18,7 @@ data class PersonEntity(
     @Column(name = "age", nullable = false, columnDefinition = "int not null check(age<100)")
     var age: Int = 0,
 
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "owner", cascade = [CascadeType.PERSIST])
     var items: List<ItemEntity> = emptyList()
 ) {
 

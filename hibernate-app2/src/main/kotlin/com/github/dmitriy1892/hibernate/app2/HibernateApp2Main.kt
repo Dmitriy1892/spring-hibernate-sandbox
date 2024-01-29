@@ -29,8 +29,10 @@ fun main() {
 //    sessionFactory.currentSession.deletePerson(1)
 //    sessionFactory.currentSession.printAllItems()
 
-    sessionFactory.currentSession.setNewOwnerForAllItems(2)
-    sessionFactory.currentSession.printAllItems()
+//    sessionFactory.currentSession.setNewOwnerForAllItems(2)
+//    sessionFactory.currentSession.printAllItems()
+
+    sessionFactory.currentSession.startCascadingSample()
 }
 
 private fun Session.addNewItem(): PersonEntity = executeInTransaction {
@@ -82,4 +84,12 @@ private fun Session.setNewOwnerForAllItems(personId: Int) = executeInTransaction
     val person = get(PersonEntity::class.java, personId)
     val items = createQuery("FROM ItemEntity", ItemEntity::class.java).resultList
     items.forEach { item -> item.owner = person }
+}
+
+private fun Session.startCascadingSample() = executeInTransaction {
+    val person = PersonEntity(name = "Test cascading", age = 30)
+    val item = ItemEntity(itemName = "Test cascading item", owner = person)
+    person.items = listOf(item)
+
+    persist(person)
 }
